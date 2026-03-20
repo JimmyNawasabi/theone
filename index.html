@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Gilded Cage: A RACK Experience</title>
+    <title>The Gilded Cage: Ultimate Edition</title>
     <style>
         :root {
             --gold: #d4af37;
@@ -61,7 +61,7 @@
             font-weight: bold;
             text-transform: uppercase;
             display: block;
-            margin: 20px auto;
+            margin: 10px auto;
             width: 250px;
             transition: all 0.3s;
         }
@@ -109,8 +109,6 @@
         .inactive { opacity: 0.1; filter: grayscale(1); }
 
         .delete-btn { color: var(--accent-red); cursor: pointer; float: right; font-weight: bold; }
-        
-        /* Checkbox Styling */
         input[type="checkbox"] { width: auto; margin-right: 10px; }
     </style>
 </head>
@@ -120,7 +118,7 @@
     <div id="setup-page" class="section active">
         <h1>The Gilded Cage</h1>
         <div class="input-group">
-            <label>Master/Sub Player 1</label>
+            <label>Player 1 (Name & Anatomy)</label>
             <input type="text" id="p1-name" placeholder="Name">
             <select id="p1-gender">
                 <option value="male">Penis Owner</option>
@@ -128,7 +126,7 @@
             </select>
         </div>
         <div class="input-group">
-            <label>Master/Sub Player 2</label>
+            <label>Player 2 (Name & Anatomy)</label>
             <input type="text" id="p2-name" placeholder="Name">
             <select id="p2-gender">
                 <option value="male">Penis Owner</option>
@@ -136,31 +134,25 @@
             </select>
         </div>
         <div class="input-group">
-            <label>Game Rounds (Default 20)</label>
-            <input type="number" id="max-rounds" value="20">
+            <label>Rounds</label>
+            <input type="number" id="max-rounds" value="15">
         </div>
-        <button class="btn" onclick="goToInventory()">Configure Kit</button>
+        <button class="btn" onclick="goToInventory()">Next: Configure Kit</button>
     </div>
 
     <div id="inventory-page" class="section">
-        <h2>The Arsenal & Desires</h2>
+        <h2>Your Arsenal</h2>
         <div id="inventory-container" class="inventory-grid"></div>
-        <hr style="border-color: var(--gold); margin: 30px 0;">
-        <div class="item-list">
-            <h3>Accepted Fetishes</h3>
-            <div id="fetish-list"></div>
-            <input type="text" id="new-fetish" placeholder="Add custom fetish..." onkeydown="if(event.key==='Enter') addFetish()">
-        </div>
-        <button class="btn" onclick="startGame()">Commence Play</button>
+        <button class="btn" onclick="startGame()">Start Game</button>
     </div>
 
     <div id="game-page" class="section">
         <div class="stats-bar">
-            <div id="round-display">Round: 1/20</div>
-            <div id="score-display">P1: 0 | P2: 0</div>
+            <div id="round-display">Round: 1</div>
+            <div id="score-display">Scores</div>
         </div>
 
-        <div id="role-display" style="text-align: center; color: var(--gold); font-size: 1.2rem; margin-bottom: 20px;"></div>
+        <div id="role-display" style="text-align: center; color: var(--gold); margin-bottom: 10px;"></div>
 
         <div class="card-display">
             <div id="yellow-ui" class="card yellow-card inactive">Yellow Card</div>
@@ -176,47 +168,50 @@
         <div id="task-ui" style="display:none;">
             <div class="task-box" id="task-desc"></div>
             <div class="timer" id="timer-display">00:00</div>
-            <div id="action-buttons">
-                <button class="btn" id="start-btn" onclick="startTimer()">Start Action</button>
-                <button class="btn" id="yellow-btn" onclick="useYellowCard()" style="display:none; background:#ffd700;">Use Yellow Card</button>
-                <button class="btn" id="red-btn" onclick="useRedCard()" style="display:none; background:var(--accent-red); color:white;">Use Red Card</button>
+            
+            <div id="action-controls">
+                <button class="btn" id="start-btn" onclick="startTimer()">Start Timer</button>
+                <div id="early-resolve" style="display:none; gap: 10px; justify-content: center;">
+                    <button class="btn" onclick="resolveTask(true)" style="background:green; color:white; width: 120px;">Success</button>
+                    <button class="btn" onclick="resolveTask(false)" style="background:var(--accent-red); color:white; width: 120px;">Failure</button>
+                </div>
             </div>
-            <div id="result-buttons" style="display:none; gap: 10px; justify-content: center;">
-                <button class="btn" onclick="resolveTask(true)" style="background:green; color:white;">Success</button>
-                <button class="btn" onclick="resolveTask(false)" style="background:var(--accent-red); color:white;">Failure</button>
+
+            <div style="margin-top: 20px;">
+                <button class="btn" id="yellow-btn" onclick="useYellowCard()" style="display:none; background:#ffd700;">Yellow (Swap Roles)</button>
+                <button class="btn" id="red-btn" onclick="useRedCard()" style="display:none; background:var(--accent-red); color:white;">Red (Skip Task)</button>
             </div>
-            <button class="btn" style="background:#000; color:red; width: 100%; border: 1px solid red;" onclick="triggerSafeword()">SAFEWORD</button>
+            
+            <button class="btn" style="background:#000; color:red; width: 100%; margin-top: 30px;" onclick="triggerSafeword()">SAFEWORD</button>
         </div>
     </div>
 
     <div id="final-page" class="section">
-        <h1 id="winner-name">Winner</h1>
+        <h1 id="winner-name"></h1>
         <div class="task-box" id="grand-prize-desc"></div>
-        <button class="btn" onclick="location.reload()">Reset Game</button>
+        <button class="btn" onclick="location.reload()">New Session</button>
     </div>
 </div>
 
 <audio id="snd-whip" src="https://actions.google.com/sounds/v1/foley/whip_crack.ogg"></audio>
-<audio id="snd-success" src="https://actions.google.com/sounds/v1/foley/wind_chime_short.ogg"></audio>
 
 <script>
-/** GAME DATA **/
+/** 1. DATA **/
 const catNames = {
-    Impact: "The Sting",
-    Sensation: "The Awakening",
-    Restraints: "Stasis",
-    Gags: "Silence",
-    Blindfolds: "Darkness",
-    Toys: "Pleasure Tools"
+    Impact: "Impact Tools",
+    Sensation: "Sensory Items",
+    Restraints: "Restraints",
+    Gags: "Gags",
+    Blindfolds: "Blindfolds",
+    Toys: "Toys"
 };
 
 const realmNames = {
     shibari: "Art of Cord",
-    escape: "The Great Escape",
-    self: "Entangled",
-    dare: "The Reckoning",
+    escape: "Great Escape",
     tease: "The Brink",
     punish: "Justice & Mercy",
+    dare: "The Reckoning",
     soft: "Languid Lust",
     sensory: "Overload"
 };
@@ -227,142 +222,99 @@ let state = {
     masterIdx: 0,
     subIdx: 1,
     currentRound: 1,
-    maxRounds: 20,
-    inventory: JSON.parse(localStorage.getItem('cage_inv')) || {
-        Impact: ["Leather Paddle", "Rattan Cane", "Flogger"],
-        Sensation: ["Ice Cubes", "Wartenberg Wheel", "Hot Wax", "Feather"],
-        Restraints: ["Soft Rope", "Handcuffs", "Spreader Bar"],
-        Gags: ["Ball Gag", "Spider Gag", "Cloth Wrap"],
-        Blindfolds: ["Silk Scarf", "Sleep Mask"],
-        Toys: ["Vibrator", "Glass Wand", "Anal Plug"]
+    maxRounds: 15,
+    inventory: JSON.parse(localStorage.getItem('cage_inv_v2')) || {
+        Impact: ["Leather Paddle", "Flogger", "Cane"],
+        Sensation: ["Ice Cubes", "Warm Wax", "Feather"],
+        Restraints: ["Rope", "Handcuffs"],
+        Gags: ["Ball Gag", "Spider Gag"],
+        Blindfolds: ["Silk Blindfold"],
+        Toys: ["Vibrator", "Anal Plug"]
     },
-    fetishes: JSON.parse(localStorage.getItem('cage_fetishes')) || ["Impact", "Light Breathplay", "Pet Play"],
     yellowCard: null,
     redCard: null,
     timer: null,
-    currentTask: null,
-    vetoed: JSON.parse(localStorage.getItem('cage_veto')) || []
+    currentTask: null
 };
 
-// --- DATA INJECTION (Truncated for reliability, follow pattern to add more) ---
+/** 2. TASK DATABASE (MASSIVE EXPANSION) **/
 const taskDatabase = {
     shibari: [
-        { text: "Master, tie the submissive’s wrists to their ankles in a tight hogtie using **[Restraints]**. Use the **[Gags]** to ensure they cannot plea for release.", time: 420 },
-        { text: "Create a 'Gilded Cage' chest harness. Once bound, use **[Sensation]** to trace the rope patterns on their skin. The submissive must remain perfectly still.", time: 300 }
+        { text: "Master, tie the submissive’s wrists to their ankles in a tight hogtie using **[Restraints]**. Use **[Gags]** to silence them. They must stay in this position.", time: 420 },
+        { text: "Create a 'Goddess' harness across the chest. Once bound, use **[Sensation]** to trace the rope patterns on their skin. Perfect stillness required.", time: 300 },
+        { text: "Bind the submissive's arms in a 'Takate Kote' (box tie). Use a secondary line to pull the elbows together. Apply **[Blindfolds]**.", time: 480 },
+        { text: "Tie the submissive's ankles to a chair. Master, use **[Impact]** to rhythmically snap the rope tails against their inner thighs.", time: 360 }
     ],
     tease: [
-        { text: "Master, use **[Toys]** to bring the submissive to the very edge. When they are about to peak, stop and apply **[Sensation]** (ice). Repeat 3 times.", time: 480 },
-        { text: "Apply **[Blindfolds]** and **[Gags]**. Master, perform oral stimulation. Stop every time the submissive's breathing hitches. No climax allowed.", time: 360 }
-    ],
-    escape: [ 
-    { text: "Master, use tape or **[Stasis]** to bind the submissive's thumbs together behind their back and their big toes together. They have the duration of the timer to 'worm' across the floor and touch the Master's feet to be freed.", time: 180 },
-    { text: "The submissive is bound to a fixed object with a series of 5 complex knots using **[Stasis]**. Master, apply **[Silence]**. The submissive must untie themselves using only their hands behind their back. If they fail, they lose a point.", time: 300 },
-    { text: "Master, bind the submissive's wrists to their ankles. Place the **[Pleasure Tools]** on high inside their clothing. They must reach the 'off' switch using only their mouth or chin before the timer ends.", time: 120 },
-    { text: "Using **[Stasis]**, bind the submissive in a seated position. Master will place a small object (the 'key') on their own body. The submissive must escape their bindings and retrieve the key using only their teeth.", time: 400 },
-    { text: "Master, wrap the submissive's entire torso and arms in plastic wrap or tight **[Stasis]**. The submissive must burst or wriggle free. Master, you may use **[Impact]** to 'encourage' them throughout.", time: 240 }
-],
-        { text: "Master, use **[Restraints]** to bind the submissive's thumbs together behind their back. They have the duration of the timer to find a hidden object in the room.", time: 180 },
-        { text: "The submissive is bound to a chair. Master, apply **[Gags]**. The submissive must wriggle out of the restraints before the whip cracks.", time: 300 }
+        { text: "Master, use **[Toys]** to bring the submissive to the edge. Stop and apply **[Sensation]** (ice) immediately. Repeat 3 times. No climax.", time: 480 },
+        { text: "Apply **[Blindfolds]** and **[Gags]**. Master, perform oral stimulation. Stop every time the submissive's breathing hitches.", time: 360 },
+        { text: "The submissive is bound in **[Restraints]**. Master, use your tongue and **[Toys]**. Force them to count down from 100 by 7s. Fail = **[Impact]**.", time: 300 },
+        { text: "Master, use **[Sensation]** (warm oil) to massage the genitals. Stop just before the peak and walk away for 60 seconds.", time: 420 }
     ],
     punish: [
-        { text: "Justice: 15 strikes with **[Impact]** to the bottom. Mercy: Immediately after, use **[Sensation]** (warm oil) to massage the area until it glows.", time: 360 }
+        { text: "Justice: 15 strikes with **[Impact]** to the bottom. Mercy: Master immediately follows with a warm massage using **[Sensation]**.", time: 300 },
+        { text: "Justice: Submissive is placed in a painful stress position. Mercy: Master provides oral attention for the remainder of the timer.", time: 420 },
+        { text: "Justice: Apply **[Gags]** and use **[Sensation]** (Wartenberg wheel) on the inner arms. Mercy: Master licks the marks clean.", time: 300 }
+    ],
+    escape: [
+        { text: "Master, use **[Restraints]** to bind the sub's thumbs together. They must find the hidden 'key' (a small object) in the room to be freed.", time: 180 },
+        { text: "Submissive is bound to a chair. Master, apply **[Gags]**. The submissive must wriggle out before the timer ends.", time: 300 },
+        { text: "Bind wrists to ankles. Place **[Toys]** on high inside underwear. They must reach the 'off' switch using only their mouth.", time: 120 }
     ],
     dare: [
-        { text: "Submissive, you must remain in a deep squat. Master will use **[Impact]** if your heels touch. Describe why you enjoy submitting.", time: 300 }
-    ],
-    self: [
-        { text: "Submissive, use **[Restraints]** to tie your own ankles together. Then, slide your wrists into loops and tighten them. Master will inspect.", time: 240 }
+        { text: "Submissive must maintain a 'plank' position. Master uses **[Sensation]** on their back. If they drop, start over + **[Impact]**.", time: 180 },
+        { text: "The submissive must describe every sensation they feel while the Master uses **[Toys]**. If they stop talking, apply **[Gags]**.", time: 360 }
     ],
     soft: [
-        { text: "Master, enter the submissive slowly. Use **[Blindfolds]** so they can only feel your weight and movement. No fast thrusting.", time: 600 }
+        { text: "Master, enter the submissive slowly. Use **[Blindfolds]** so they can only feel your weight. Slow, deep intimacy. No rush.", time: 600 },
+        { text: "Master, use **[Sensation]** (silk/fur) to caress the body while performing oral sex. Melt the submissive into the bed.", time: 480 }
     ],
     sensory: [
-        { text: "Master, apply **[Blindfolds]** and **[Gags]**. Use **[Sensation]** (Ice) on the genitals while using **[Toys]** on the nipples.", time: 300 }
+        { text: "Apply **[Blindfolds]** and **[Gags]**. Use three different **[Sensation]** items at once (ice, feather, warm hand). Keep them guessing.", time: 300 },
+        { text: "Master, use **[Toys]** on two different areas while playing loud music. Submissive must lose themselves in the noise.", time: 360 }
     ]
 };
 
 const grandPrizes = [
-    { text: "The Coronation: The winner takes the Master role. The loser is bound and the winner spends 45 minutes using the entire arsenal. Ends in a commanded climax." },
-    { text: "The Ocean of Sensation: A 30-minute blindfolded session where the winner uses temperature play and vibration to drown the loser's senses." }
+    { text: "The Coronation: Winner takes the Master role. Loser is bound for 45 minutes of continuous play with the entire arsenal. Climax granted only on command." },
+    { text: "The Ocean of Sensation: Blindfold and bind the loser. Winner uses temperature play, vibration, and mouth to overwhelm them for 30 minutes." }
 ];
 
-/** ENGINE FUNCTIONS **/
+/** 3. CORE LOGIC **/
 
 function goToInventory() {
     state.p1.name = document.getElementById('p1-name').value || "Player 1";
     state.p1.gender = document.getElementById('p1-gender').value;
     state.p2.name = document.getElementById('p2-name').value || "Player 2";
     state.p2.gender = document.getElementById('p2-gender').value;
-    state.maxRounds = parseInt(document.getElementById('max-rounds').value) || 20;
+    state.maxRounds = parseInt(document.getElementById('max-rounds').value) || 15;
 
-    renderInventory();
+    renderInv();
     document.getElementById('setup-page').classList.remove('active');
     document.getElementById('inventory-page').classList.add('active');
 }
 
-function renderInventory() {
-    const invDiv = document.getElementById('inventory-container');
-    invDiv.innerHTML = "";
-    for (let cat in state.inventory) {
-        let html = `<div class="item-list"><h3>${catNames[cat]}</h3>`;
-        state.inventory[cat].forEach(item => {
-            html += `<div style="margin:5px 0;"><input type="checkbox" checked data-cat="${cat}" data-val="${item}"> ${item} <span class="delete-btn" onclick="deleteItem('${cat}','${item}')">&times;</span></div>`;
+function renderInv() {
+    const container = document.getElementById('inventory-container');
+    container.innerHTML = "";
+    for(let cat in state.inventory) {
+        let h = `<div class="item-list"><h3>${catNames[cat]}</h3>`;
+        state.inventory[cat].forEach(i => {
+            h += `<div>${i}</div>`;
         });
-        html += `<input type="text" placeholder="Add..." onkeydown="if(event.key==='Enter') addItem('${cat}', this.value)"></div>`;
-        invDiv.innerHTML += html;
+        h += `</div>`;
+        container.innerHTML += h;
     }
-
-    const fetDiv = document.getElementById('fetish-list');
-    fetDiv.innerHTML = "";
-    state.fetishes.forEach(f => {
-        fetDiv.innerHTML += `<div style="margin:5px 0;"><input type="checkbox" checked class="fetish-check" value="${f}"> ${f} <span class="delete-btn" onclick="deleteFetish('${f}')">&times;</span></div>`;
-    });
-}
-
-function addItem(cat, val) {
-    if(!val) return;
-    state.inventory[cat].push(val);
-    save();
-    renderInventory();
-}
-
-function deleteItem(cat, val) {
-    state.inventory[cat] = state.inventory[cat].filter(i => i !== val);
-    save();
-    renderInventory();
-}
-
-function addFetish() {
-    let val = document.getElementById('new-fetish').value;
-    if(!val) return;
-    state.fetishes.push(val);
-    save();
-    renderInventory();
-    document.getElementById('new-fetish').value = "";
-}
-
-function deleteFetish(val) {
-    state.fetishes = state.fetishes.filter(f => f !== val);
-    save();
-    renderInventory();
-}
-
-function save() {
-    localStorage.setItem('cage_inv', JSON.stringify(state.inventory));
-    localStorage.setItem('cage_fetishes', JSON.stringify(state.fetishes));
 }
 
 function startGame() {
-    // Randomize roles
-    if(Math.random() > 0.5) { state.masterIdx = 0; state.subIdx = 1; } 
-    else { state.masterIdx = 1; state.subIdx = 0; }
+    state.masterIdx = Math.random() > 0.5 ? 0 : 1;
+    state.subIdx = state.masterIdx === 0 ? 1 : 0;
+    
+    // Assign one random card
+    if(Math.random() > 0.5) state.yellowCard = state.subIdx;
+    else state.redCard = state.subIdx;
 
-    // Assign Cards
-    const r = Math.random();
-    if(r < 0.3) state.yellowCard = 0; else if(r < 0.6) state.yellowCard = 1;
-    if(Math.random() < 0.4) state.redCard = (state.yellowCard === 0) ? 1 : 0;
-
-    // Render Realm Toggles
     const rt = document.getElementById('realm-toggles');
     rt.innerHTML = "";
     for(let key in realmNames) {
@@ -381,79 +333,68 @@ function updateUI() {
     
     const master = (state.masterIdx === 0) ? p1 : p2;
     const sub = (state.subIdx === 0) ? p1 : p2;
-    document.getElementById('role-display').innerText = `${master.name} (Master) & ${sub.name} (Submissive)`;
+    document.getElementById('role-display').innerText = `Master: ${master.name} | Submissive: ${sub.name}`;
 
     document.getElementById('yellow-ui').className = `card yellow-card ${state.yellowCard === null ? 'inactive' : ''}`;
     document.getElementById('red-ui').className = `card red-card ${state.redCard === null ? 'inactive' : ''}`;
 }
 
 function drawTask() {
-    const activeRealms = Array.from(document.querySelectorAll('.realm-box:checked')).map(b => b.value);
-    if(activeRealms.length === 0) return alert("Choose a Realm.");
+    const realms = Array.from(document.querySelectorAll('.realm-box:checked')).map(b => b.value);
+    if(realms.length === 0) return alert("Select at least one realm.");
 
-    const rKey = activeRealms[Math.floor(Math.random() * activeRealms.length)];
-    const pool = taskDatabase[rKey];
-    let rawTask = pool[Math.floor(Math.random() * pool.length)];
+    const r = realms[Math.floor(Math.random() * realms.length)];
+    const pool = taskDatabase[r];
+    let task = pool[Math.floor(Math.random() * pool.length)];
 
-    // Replace place holders
-    let text = rawTask.text;
+    let text = task.text;
     for(let cat in catNames) {
         let items = state.inventory[cat];
         let item = items[Math.floor(Math.random() * items.length)];
         text = text.replace(`[${cat}]`, `<b style="color:var(--gold)">${item}</b>`);
     }
 
-    state.currentTask = { ...rawTask, text: text };
+    state.currentTask = { ...task, text: text };
     document.getElementById('task-desc').innerHTML = text;
-    document.getElementById('timer-display').innerText = formatTime(rawTask.time);
+    document.getElementById('timer-display').innerText = format(task.time);
     
     document.getElementById('master-choice-ui').style.display = 'none';
     document.getElementById('task-ui').style.display = 'block';
     document.getElementById('start-btn').style.display = 'block';
-    document.getElementById('result-buttons').style.display = 'none';
+    document.getElementById('early-resolve').style.display = 'none';
 
-    // Show card buttons if held
-    document.getElementById('yellow-btn').style.display = (state.yellowCard === state.subIdx) ? 'inline-block' : 'none';
-    document.getElementById('red-btn').style.display = (state.redCard !== null) ? 'inline-block' : 'none';
+    document.getElementById('yellow-btn').style.display = (state.yellowCard === state.subIdx) ? 'block' : 'none';
+    document.getElementById('red-btn').style.display = (state.redCard === state.subIdx) ? 'block' : 'none';
 }
 
 function startTimer() {
-    let sec = state.currentTask.time;
+    let s = state.currentTask.time;
     document.getElementById('start-btn').style.display = 'none';
-    document.getElementById('yellow-btn').style.display = 'none';
-    document.getElementById('red-btn').style.display = 'none';
+    document.getElementById('early-resolve').style.display = 'flex';
 
     state.timer = setInterval(() => {
-        sec--;
-        document.getElementById('timer-display').innerText = formatTime(sec);
-        if(sec <= 0) {
+        s--;
+        document.getElementById('timer-display').innerText = format(s);
+        if(s <= 0) {
             clearInterval(state.timer);
             document.getElementById('snd-whip').play();
-            document.getElementById('result-buttons').style.display = 'flex';
         }
     }, 1000);
 }
 
-function formatTime(s) {
-    let m = Math.floor(s / 60);
-    let rs = s % 60;
-    return `${m}:${rs < 10 ? '0'+rs : rs}`;
-}
-
 function resolveTask(success) {
+    clearInterval(state.timer);
     if(success) {
         if(state.subIdx === 0) state.p1.score++; else state.p2.score++;
-        document.getElementById('snd-success').play();
-        // Role swap
-        let temp = state.masterIdx; state.masterIdx = state.subIdx; state.subIdx = temp;
+        // Swap roles for next round
+        let t = state.masterIdx; state.masterIdx = state.subIdx; state.subIdx = t;
     } else {
         if(state.subIdx === 0) state.p1.score--; else state.p2.score--;
-        if(Math.random() > 0.7) alert("WHIM: Immediate 1-minute punishment required.");
     }
 
     state.currentRound++;
     if(state.currentRound > state.maxRounds) {
-        showFinal();
+        finish();
     } else {
         document.getElementById('task-ui').style.display = 'none';
         document.getElementById('master-choice-ui').style.display = 'block';
@@ -462,39 +403,40 @@ function resolveTask(success) {
 }
 
 function useYellowCard() {
-    let temp = state.masterIdx; state.masterIdx = state.subIdx; state.subIdx = temp;
-    state.yellowCard = (state.yellowCard === 0) ? 1 : 0;
-    alert("Roles Swapped!");
+    let t = state.masterIdx; state.masterIdx = state.subIdx; state.subIdx = t;
+    state.yellowCard = null;
+    alert("Yellow Card Used: Roles Swapped!");
     document.getElementById('task-ui').style.display = 'none';
     document.getElementById('master-choice-ui').style.display = 'block';
     updateUI();
 }
 
 function useRedCard() {
-    state.redCard = (state.redCard === 0) ? 1 : 0;
-    alert("Task Skipped!");
+    state.redCard = null;
+    alert("Red Card Used: Task Skipped!");
     document.getElementById('task-ui').style.display = 'none';
     document.getElementById('master-choice-ui').style.display = 'block';
     updateUI();
 }
 
 function triggerSafeword() {
-    if(state.subIdx === 0) state.p1.score -= 5; else state.p2.score -= 5;
     clearInterval(state.timer);
-    alert("SAFEWORD: Play paused. Submissive loses 5 points.");
-    document.getElementById('task-ui').style.display = 'none';
-    document.getElementById('master-choice-ui').style.display = 'block';
-    updateUI();
+    alert("GAME HALTED. Safety check required.");
+    location.reload();
 }
 
-function showFinal() {
+function finish() {
     document.getElementById('game-page').style.display = 'none';
     document.getElementById('final-page').classList.add('active');
-    const winner = (state.p1.score >= state.p2.score) ? state.p1 : state.p2;
+    const winner = state.p1.score >= state.p2.score ? state.p1 : state.p2;
     document.getElementById('winner-name').innerText = `${winner.name} Wins!`;
     document.getElementById('grand-prize-desc').innerText = grandPrizes[Math.floor(Math.random()*grandPrizes.length)].text;
 }
 
+function format(s) {
+    let m = Math.floor(s/60); let rs = s%60;
+    return `${m}:${rs < 10 ? '0'+rs : rs}`;
+}
 </script>
 </body>
 </html>
